@@ -8,5 +8,6 @@
     ],
     "autoload": {
         "psr-4": {"Managlea\\Component\\ResourceMapper\\": ""}
-    }
+    },
+    "target-dir": "Managlea/Component/ResourceMapper"
 }
