@@ -1,13 +1,17 @@
 {
-    "name": "managlea/resource-mapper",
-    "type": "library",
-    "authors": [
-        {
-            "name": "Kauri Kont-Kontson"
-        }
-    ],
-    "autoload": {
-        "psr-0": {"Managlea\\Component\\ResourceMapper\\": ""}
-    },
-    "target-dir": "Managlea/Component/ResourceMapper"
+  "name": "managlea/resource-mapper",
+  "description": "",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Kauri Kont-Kontson"
+    }
+  ],
+  "autoload": {
+    "psr-4": {"Managlea\\ResourceMapper\\": "src/"}
+  },
+  "require-dev": {
+    "codeclimate/php-test-reporter": "dev-master"
+  }
 }
