@@ -19,13 +19,13 @@ class Test extends \PHPUnit_Framework_TestCase
     public function getSingle()
     {
         $mock = $this->getMockForAbstractClass('Managlea\ResourceHandler\ResourceHandler');
-        $mock->expects($this->any())
+        $mock->expects($this->once())
             ->method('findResource')
             ->will($this->returnValue(true));
         $this->assertEquals(true, $mock->getSingle(1));
 
         $mock = $this->getMockForAbstractClass('Managlea\ResourceHandler\ResourceHandler');
-        $mock->expects($this->any())
+        $mock->expects($this->once())
             ->method('findResource')
             ->will($this->returnValue(false));
         $this->assertEquals(false, $mock->getSingle(1));
@@ -37,13 +37,13 @@ class Test extends \PHPUnit_Framework_TestCase
     public function getCollection()
     {
         $mock = $this->getMockForAbstractClass('Managlea\ResourceHandler\ResourceHandler');
-        $mock->expects($this->any())
+        $mock->expects($this->once())
             ->method('findResourceCollection')
             ->will($this->returnValue(array()));
         $this->assertEquals(array(), $mock->getCollection());
 
         $mock = $this->getMockForAbstractClass('Managlea\ResourceHandler\ResourceHandler');
-        $mock->expects($this->any())
+        $mock->expects($this->once())
             ->method('findResourceCollection')
             ->will($this->returnValue(false));
         $this->assertEquals(false, $mock->getCollection());
@@ -55,13 +55,13 @@ class Test extends \PHPUnit_Framework_TestCase
     public function postSingle()
     {
         $mock = $this->getMockForAbstractClass('Managlea\ResourceHandler\ResourceHandler');
-        $mock->expects($this->any())
+        $mock->expects($this->once())
             ->method('createResource')
             ->will($this->returnValue(true));
         $this->assertEquals(true, $mock->postSingle(array()));
 
         $mock = $this->getMockForAbstractClass('Managlea\ResourceHandler\ResourceHandler');
-        $mock->expects($this->any())
+        $mock->expects($this->once())
             ->method('createResource')
             ->will($this->returnValue(false));
         $this->assertEquals(false, $mock->postSingle(array()));
