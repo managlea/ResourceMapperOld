@@ -1,17 +1,17 @@
 <?php
 
-namespace Managlea\CoreBundle\Utility;
+namespace Managlea\ResourceMapper;
 
-use Managlea\CoreBundle\Utility\Resource\Action as ActionResource;
-use Managlea\CoreBundle\Utility\Resource\Action\Error as ErrorResource;
-use Managlea\CoreBundle\Utility\Resource\Data\Single as SingleResource;
-use Managlea\CoreBundle\Utility\Resource\Data\Collection as ResourceCollection;
-use Managlea\CoreBundle\Utility\Resource\Exception as ExceptionResource;
-use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormFactory;
+//use Managlea\CoreBundle\Utility\Resource\Action as ActionResource;
+//use Managlea\CoreBundle\Utility\Resource\Action\Error as ErrorResource;
+//use Managlea\CoreBundle\Utility\Resource\Data\Single as SingleResource;
+//use Managlea\CoreBundle\Utility\Resource\Data\Collection as ResourceCollection;
+//use Managlea\CoreBundle\Utility\Resource\Exception as ExceptionResource;
+//use Symfony\Component\Config\Definition\Exception\Exception;
+//use Symfony\Component\Form\Form;
+//use Symfony\Component\Form\FormFactory;
 
-abstract class ResourceMapper
+abstract class ResourceMapper implements ResourceMapperInterface
 {
     /**
      * @var \Symfony\Component\Form\FormFactory
@@ -41,8 +41,7 @@ abstract class ResourceMapper
 
     public function __construct()
     {
-        if (!static::SOURCE_OBJECT_NAMESPACE || !static::SOURCE_OBJECT_FORM_NAMESPACE)
-        {
+        if (!static::SOURCE_OBJECT_NAMESPACE || !static::SOURCE_OBJECT_FORM_NAMESPACE) {
             throw new Exception('Source object or object form namespace not set');
         }
     }
@@ -63,8 +62,7 @@ abstract class ResourceMapper
     {
         $entity = $this->findEntity($resourceId);
 
-        if (!$entity)
-        {
+        if (!$entity) {
             return false;
         }
 
@@ -87,10 +85,8 @@ abstract class ResourceMapper
         $entityCollection = $this->findEntityCollection($filters);
         $data = array();
 
-        if (!empty($entityCollection))
-        {
-            foreach ($entityCollection as $entity)
-            {
+        if (!empty($entityCollection)) {
+            foreach ($entityCollection as $entity) {
                 $data[] = new SingleResource(
                     $entity->getId(),
                     static::SOURCE_OBJECT_NAMESPACE,
@@ -120,27 +116,21 @@ abstract class ResourceMapper
         // Create form and bind data and entity together
         $form = $this->createForm($entity, $data);
 
-        if ($form->isValid())
-        {
-            try
-            {
+        if ($form->isValid()) {
+            try {
                 $this->persistEntity($entity);
                 $resource = new ActionResource(
                     static::SOURCE_OBJECT_NAMESPACE,
                     'post',
                     static::getMappedData($entity)
                 );
-            }
-            catch (Exception $e)
-            {
+            } catch (Exception $e) {
                 $resource = new ExceptionResource(
                     static::SOURCE_OBJECT_NAMESPACE,
                     $e->getMessage()
                 );
             }
-        }
-        else
-        {
+        } else {
             $resource = new ErrorResource(
                 static::SOURCE_OBJECT_NAMESPACE,
                 'post',
@@ -156,13 +146,10 @@ abstract class ResourceMapper
      */
     public function putSingle($resourceId, array $data)
     {
-        try
-        {
+        try {
             // Search for object
             $entity = $this->findEntity($resourceId);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $resource = new ExceptionResource(
                 static::SOURCE_OBJECT_NAMESPACE,
                 $e->getMessage()
@@ -171,35 +158,28 @@ abstract class ResourceMapper
             return $resource;
         }
 
-        if (!$entity)
-        {
+        if (!$entity) {
             return false;
         }
 
         // Create form and bind data and entity together
         $form = $this->createForm($entity, $data);
 
-        if ($form->isValid())
-        {
-            try
-            {
+        if ($form->isValid()) {
+            try {
                 $this->persistEntity($entity);
                 $resource = new ActionResource(
                     static::SOURCE_OBJECT_NAMESPACE,
                     'put',
                     static::getMappedData($entity)
                 );
-            }
-            catch (Exception $e)
-            {
+            } catch (Exception $e) {
                 $resource = new ExceptionResource(
                     static::SOURCE_OBJECT_NAMESPACE,
                     $e->getMessage()
                 );
             }
-        }
-        else
-        {
+        } else {
             $resource = new ErrorResource(
                 static::SOURCE_OBJECT_NAMESPACE,
                 'put',
@@ -215,13 +195,10 @@ abstract class ResourceMapper
      */
     public function deleteSingle($resourceId)
     {
-        try
-        {
+        try {
             // Search for object
             $entity = $this->findEntity($resourceId);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $resource = new ExceptionResource(
                 static::SOURCE_OBJECT_NAMESPACE,
                 $e->getMessage()
@@ -230,22 +207,18 @@ abstract class ResourceMapper
             return $resource;
         }
 
-        if (!$entity)
-        {
+        if (!$entity) {
             return false;
         }
 
         // Delete resource
-        try
-        {
+        try {
             $this->removeEntity($entity);
             $resource = new ActionResource(
                 static::SOURCE_OBJECT_NAMESPACE,
                 'delete'
             );
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $resource = new ExceptionResource(
                 static::SOURCE_OBJECT_NAMESPACE,
                 $e->getMessage()
@@ -263,8 +236,7 @@ abstract class ResourceMapper
      */
     private function createForm($entity, array $data)
     {
-        if (!$this->formFactory)
-        {
+        if (!$this->formFactory) {
             throw new Exception('Form factory not set');
         }
 
@@ -288,14 +260,11 @@ abstract class ResourceMapper
     private function getFormErrors(Form $form)
     {
         $errors = array();
-        foreach ($form as $child)
-        {
-            /** @var \Symfony\Component\Form\Form $child **/
-            if (!$child->isValid())
-            {
+        foreach ($form as $child) {
+            /** @var \Symfony\Component\Form\Form $child * */
+            if (!$child->isValid()) {
                 /** @var \Symfony\Component\Form\FormError $error */
-                foreach ($child->getErrors() as $error)
-                {
+                foreach ($child->getErrors() as $error) {
                     $errors[$child->getName()][] = $error->getMessage();
                 }
             }

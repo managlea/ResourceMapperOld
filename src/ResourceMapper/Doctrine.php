@@ -24,8 +24,7 @@ abstract class Doctrine extends ResourceMapper
     {
         $entityManager = $rdbms->getOrm();
 
-        if (!$entityManager instanceof EntityManager)
-        {
+        if (!$entityManager instanceof EntityManager) {
             throw new Exception('Entity manager not instance of \Doctrine\ORM\EntityManager');
         }
 
@@ -39,22 +38,19 @@ abstract class Doctrine extends ResourceMapper
      */
     final protected function findEntity($resourceId)
     {
-        if (!$this->entityManager)
-        {
+        if (!$this->entityManager) {
             throw new Exception('Entity manager not set');
         }
 
         $repository = $this->entityManager->getRepository(static::SOURCE_OBJECT_NAMESPACE);
 
-        if (!($repository instanceof EntityRepository))
-        {
+        if (!($repository instanceof EntityRepository)) {
             throw new Exception('Repository not found');
         }
 
         $entity = $repository->find($resourceId);
 
-        if (!$entity)
-        {
+        if (!$entity) {
             return false;
         }
 
@@ -71,15 +67,13 @@ abstract class Doctrine extends ResourceMapper
         $limit = 20;
         $offset = 0;
 
-        if (!$this->entityManager)
-        {
+        if (!$this->entityManager) {
             throw new Exception('Entity manager not set');
         }
 
         $repository = $this->entityManager->getRepository(static::SOURCE_OBJECT_NAMESPACE);
 
-        if (!($repository instanceof EntityRepository))
-        {
+        if (!($repository instanceof EntityRepository)) {
             throw new Exception('Repository not found');
         }
 
@@ -87,6 +81,7 @@ abstract class Doctrine extends ResourceMapper
 
         return $collection;
     }
+
     /**
      * @param $entity
      * @return mixed
@@ -96,8 +91,7 @@ abstract class Doctrine extends ResourceMapper
     {
         $namespace = static::SOURCE_OBJECT_NAMESPACE;
 
-        if (!$entity instanceof $namespace)
-        {
+        if (!$entity instanceof $namespace) {
             throw new Exception('Entity is not instance of ' . $namespace);
         }
 
@@ -110,8 +104,7 @@ abstract class Doctrine extends ResourceMapper
      */
     protected function persistEntity($entity)
     {
-        if (!$this->entityManager)
-        {
+        if (!$this->entityManager) {
             throw new Exception('Entity manager not set');
         }
 
