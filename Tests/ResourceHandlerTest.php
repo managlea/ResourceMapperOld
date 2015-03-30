@@ -7,7 +7,7 @@ class Test extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function IsInstanceOfInterface()
+    public function isInstanceOfInterface()
     {
         $mock = $this->getMockForAbstractClass('Managlea\ResourceHandler\ResourceHandler');
         $this->assertInstanceOf('Managlea\ResourceHandler\ResourceHandlerInterface', $mock);
@@ -47,5 +47,64 @@ class Test extends \PHPUnit_Framework_TestCase
             ->method('findResourceCollection')
             ->will($this->returnValue(false));
         $this->assertEquals(false, $mock->getCollection());
+    }
+
+    /**
+     * @test
+     */
+    public function postSingle()
+    {
+        $mock = $this->getMockForAbstractClass('Managlea\ResourceHandler\ResourceHandler');
+        $mock->expects($this->any())
+            ->method('createResource')
+            ->will($this->returnValue(true));
+        $this->assertEquals(true, $mock->postSingle(array()));
+
+        $mock = $this->getMockForAbstractClass('Managlea\ResourceHandler\ResourceHandler');
+        $mock->expects($this->any())
+            ->method('createResource')
+            ->will($this->returnValue(false));
+        $this->assertEquals(false, $mock->postSingle(array()));
+    }
+
+    /**
+     * @test
+     */
+    public function putSingle()
+    {
+        $mock = $this->getMockForAbstractClass('Managlea\ResourceHandler\ResourceHandler');
+        $mock->expects($this->once())
+            ->method('findResource')
+            ->will($this->returnValue(false));
+        $this->assertEquals(false, $mock->putSingle(1, array()));
+
+        $mock = $this->getMockForAbstractClass('Managlea\ResourceHandler\ResourceHandler');
+        $mock->expects($this->once())
+            ->method('findResource')
+            ->will($this->returnValue(true));
+        $mock->expects($this->once())
+            ->method('updateResource')
+            ->will($this->returnValue(true));
+        $this->assertEquals(true, $mock->putSingle(1, array()));
+    }
+
+    /**
+     * @test
+     */
+    public function deleteSingle()
+    {
+        $mock = $this->getMockForAbstractClass('Managlea\ResourceHandler\ResourceHandler');
+        $mock->expects($this->once())
+            ->method('findResource')
+            ->will($this->returnValue(false));
+        $this->assertEquals(false, $mock->deleteSingle(1, array()));
+
+        $mock = $this->getMockForAbstractClass('Managlea\ResourceHandler\ResourceHandler');
+        $mock->expects($this->once())
+            ->method('findResource')
+            ->will($this->returnValue(true));
+        $mock->expects($this->once())
+            ->method('removeResource');
+        $this->assertEquals(true, $mock->deleteSingle(1, array()));
     }
 }
