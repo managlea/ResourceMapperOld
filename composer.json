@@ -10,7 +10,7 @@
   ],
   "autoload": {
     "psr-4": {"Managlea\\ResourceMapper\\": "src/"},
-    "psr-4": {"Managlea\\ResourceHandler\\": "src/"}
+    "psr-4": {"Managlea\\Component\\": "src/"}
   },
   "require-dev": {
     "codeclimate/php-test-reporter": "dev-master"

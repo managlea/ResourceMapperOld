@@ -1,6 +1,6 @@
 <?php
 
-namespace Managlea\ResourceHandler;
+namespace Managlea\Component;
 
 class ResourceHandlerFactory
 {

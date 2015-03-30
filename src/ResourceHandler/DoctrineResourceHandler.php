@@ -1,9 +1,9 @@
 <?php
 
-namespace Managlea\ResourceHandler\ResourceHandler;
+namespace Managlea\Component\ResourceHandler;
 
 
-use Managlea\ResourceHandler\ResourceHandler;
+use Managlea\Component\ResourceHandler;
 
 class DoctrineResourceHandler extends ResourceHandler
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Managlea\ResourceHandler;
+namespace Managlea\Component;
 
 abstract class ResourceHandler implements ResourceHandlerInterface
 {
@@ -29,6 +29,11 @@ abstract class ResourceHandler implements ResourceHandlerInterface
      * @param int $resourceId
      */
     abstract protected function removeResource($resourceId);
+
+    public function __construct()
+    {
+        var_dump('foo');
+    }
 
     /**
      * @param int $resourceId
