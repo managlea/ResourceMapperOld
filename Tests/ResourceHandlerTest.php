@@ -4,13 +4,27 @@ namespace Managlea\Component\Tests;
 
 class Test extends \PHPUnit_Framework_TestCase
 {
+    const CLASS_NAMESPACE = 'Managlea\\Component\\';
+
+    private function getResourceHandlerMock()
+    {
+        $mock = $this->getMockForAbstractClass(
+            self::CLASS_NAMESPACE . 'ResourceHandler',
+            array(
+                $this->getMock(self::CLASS_NAMESPACE . 'ResourceFactoryInterface')
+            )
+        );
+
+        return $mock;
+    }
+
     /**
      * @test
      */
     public function isInstanceOfInterface()
     {
-        $mock = $this->getMockForAbstractClass('Managlea\Component\ResourceHandler');
-        $this->assertInstanceOf('Managlea\Component\ResourceHandlerInterface', $mock);
+        $mock = $this->getResourceHandlerMock();
+        $this->assertInstanceOf(self::CLASS_NAMESPACE  . 'ResourceHandlerInterface', $mock);
     }
 
     /**
@@ -18,13 +32,13 @@ class Test extends \PHPUnit_Framework_TestCase
      */
     public function getSingle()
     {
-        $mock = $this->getMockForAbstractClass('Managlea\Component\ResourceHandler');
+        $mock = $this->getResourceHandlerMock();
         $mock->expects($this->once())
             ->method('findResource')
             ->will($this->returnValue(true));
         $this->assertEquals(true, $mock->getSingle(1));
 
-        $mock = $this->getMockForAbstractClass('Managlea\Component\ResourceHandler');
+        $mock = $this->getResourceHandlerMock();
         $mock->expects($this->once())
             ->method('findResource')
             ->will($this->returnValue(false));
@@ -36,13 +50,13 @@ class Test extends \PHPUnit_Framework_TestCase
      */
     public function getCollection()
     {
-        $mock = $this->getMockForAbstractClass('Managlea\Component\ResourceHandler');
+        $mock = $this->getResourceHandlerMock();
         $mock->expects($this->once())
             ->method('findResourceCollection')
             ->will($this->returnValue(array()));
         $this->assertEquals(array(), $mock->getCollection());
 
-        $mock = $this->getMockForAbstractClass('Managlea\Component\ResourceHandler');
+        $mock = $this->getResourceHandlerMock();
         $mock->expects($this->once())
             ->method('findResourceCollection')
             ->will($this->returnValue(false));
@@ -54,13 +68,13 @@ class Test extends \PHPUnit_Framework_TestCase
      */
     public function postSingle()
     {
-        $mock = $this->getMockForAbstractClass('Managlea\Component\ResourceHandler');
+        $mock = $this->getResourceHandlerMock();
         $mock->expects($this->once())
             ->method('createResource')
             ->will($this->returnValue(true));
         $this->assertEquals(true, $mock->postSingle(array()));
 
-        $mock = $this->getMockForAbstractClass('Managlea\Component\ResourceHandler');
+        $mock = $this->getResourceHandlerMock();
         $mock->expects($this->once())
             ->method('createResource')
             ->will($this->returnValue(false));
@@ -72,13 +86,13 @@ class Test extends \PHPUnit_Framework_TestCase
      */
     public function putSingle()
     {
-        $mock = $this->getMockForAbstractClass('Managlea\Component\ResourceHandler');
+        $mock = $this->getResourceHandlerMock();
         $mock->expects($this->once())
             ->method('findResource')
             ->will($this->returnValue(false));
         $this->assertEquals(false, $mock->putSingle(1, array()));
 
-        $mock = $this->getMockForAbstractClass('Managlea\Component\ResourceHandler');
+        $mock = $this->getResourceHandlerMock();
         $mock->expects($this->once())
             ->method('findResource')
             ->will($this->returnValue(true));
@@ -93,13 +107,13 @@ class Test extends \PHPUnit_Framework_TestCase
      */
     public function deleteSingle()
     {
-        $mock = $this->getMockForAbstractClass('Managlea\Component\ResourceHandler');
+        $mock = $this->getResourceHandlerMock();
         $mock->expects($this->once())
             ->method('findResource')
             ->will($this->returnValue(false));
         $this->assertEquals(false, $mock->deleteSingle(1, array()));
 
-        $mock = $this->getMockForAbstractClass('Managlea\Component\ResourceHandler');
+        $mock = $this->getResourceHandlerMock();
         $mock->expects($this->once())
             ->method('findResource')
             ->will($this->returnValue(true));

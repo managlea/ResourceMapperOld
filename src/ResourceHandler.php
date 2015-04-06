@@ -4,6 +4,8 @@ namespace Managlea\Component;
 
 abstract class ResourceHandler implements ResourceHandlerInterface
 {
+    protected $resourceFactory = null;
+
     /**
      * @param int $resourceId
      */
@@ -30,9 +32,12 @@ abstract class ResourceHandler implements ResourceHandlerInterface
      */
     abstract protected function removeResource($resourceId);
 
-    public function __construct()
+    /**
+     * @param ResourceFactoryInterface $resourceFactory
+     */
+    public function __construct(ResourceFactoryInterface $resourceFactory)
     {
-        var_dump('foo');
+        $this->resourceFactory = $resourceFactory;
     }
 
     /**
