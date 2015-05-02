@@ -2,7 +2,7 @@
 
 namespace Managlea\Component\Tests;
 
-class Test extends \PHPUnit_Framework_TestCase
+class ResourceHandlerTest extends \PHPUnit_Framework_TestCase
 {
     const CLASS_NAMESPACE = 'Managlea\\Component\\';
 
