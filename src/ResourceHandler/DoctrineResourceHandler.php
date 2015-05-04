@@ -7,7 +7,6 @@ use Doctrine\ORM\EntityRepository;
 use Managlea\Component\EntityManagerInterface;
 use Managlea\Component\ResourceHandler;
 use Managlea\Component\ResourceFactoryInterface;
-use Symfony\Component\Config\Definition\Exception\Exception;
 
 class DoctrineResourceHandler extends ResourceHandler
 {
@@ -25,14 +24,14 @@ class DoctrineResourceHandler extends ResourceHandler
     /**
      * @param int $resourceId
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     protected function findResource($resourceId)
     {
         $repository = $this->entityManager->getRepository(/*static::SOURCE_OBJECT_NAMESPACE*/);
 
         if (!($repository instanceof EntityRepository)) {
-            throw new Exception('Repository not found');
+            throw new \Exception('Repository not found');
         }
 
         $entity = $repository->find($resourceId);
@@ -47,20 +46,17 @@ class DoctrineResourceHandler extends ResourceHandler
     /**
      * @param array $filters
      * @return array
+     * @throws \Exception
      */
     protected function findResourceCollection(array $filters = array())
     {
         $limit = 20;
         $offset = 0;
 
-        if (!$this->entityManager) {
-            throw new Exception('Entity manager not set');
-        }
-
         $repository = $this->entityManager->getRepository(/*static::SOURCE_OBJECT_NAMESPACE*/);
 
         if (!($repository instanceof EntityRepository)) {
-            throw new Exception('Repository not found');
+            throw new \Exception('Repository not found');
         }
 
         $collection = $repository->findBy($filters, null, $limit, $offset);

@@ -13,15 +13,17 @@ class DoctrineResourceHandlerTest extends \PHPUnit_Framework_TestCase
      */
     protected $resourceHandler;
 
+    protected $entityManager;
+
 
     protected function setUp()
     {
-        $entityManager = $this->getMockBuilder(self::CLASS_NAMESPACE . 'EntityManagerInterface')
+        $this->entityManager = $this->getMockBuilder(self::CLASS_NAMESPACE . 'EntityManagerInterface')
             ->getMock();
 
         $this->resourceHandler = new DoctrineResourceHandler(
             $this->getMock(self::CLASS_NAMESPACE . 'ResourceFactoryInterface'),
-            $entityManager
+            $this->entityManager
         );
     }
 
@@ -29,14 +31,11 @@ class DoctrineResourceHandlerTest extends \PHPUnit_Framework_TestCase
      * @test
      * @expectedException \Exception
      */
-    public function findResourceException()
+    public function findResourceNoRepo()
     {
-        $entityManager = $this->getMockBuilder(self::CLASS_NAMESPACE . 'EntityManagerInterface')
-            ->getMock();
-
         $resourceHandler = new DoctrineResourceHandler(
             $this->getMock(self::CLASS_NAMESPACE . 'ResourceFactoryInterface'),
-            $entityManager
+            $this->entityManager
         );
 
         $resourceHandler->getSingle(1);
@@ -47,16 +46,14 @@ class DoctrineResourceHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function findResourceNoEntity()
     {
-        $entityManager = $this->getMockBuilder(self::CLASS_NAMESPACE . 'EntityManagerInterface')
-            ->getMock();
-        $entityManager->method('getRepository')
+        $this->entityManager->method('getRepository')
             ->willReturn($this->getMockBuilder('\Doctrine\ORM\EntityRepository')
                 ->disableOriginalConstructor()
                 ->getMock());
 
         $resourceHandler = new DoctrineResourceHandler(
             $this->getMock(self::CLASS_NAMESPACE . 'ResourceFactoryInterface'),
-            $entityManager
+            $this->entityManager
         );
 
         $this->assertEquals(false, $resourceHandler->getSingle(1));
@@ -67,31 +64,55 @@ class DoctrineResourceHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function findResource()
     {
-        $entityManager = $this->getMockBuilder(self::CLASS_NAMESPACE . 'EntityManagerInterface')
+        $foo =  $this->getMockBuilder('Foo')
             ->getMock();
         $repo = $this->getMockBuilder('\Doctrine\ORM\EntityRepository')
             ->disableOriginalConstructor()
             ->getMock();
         $repo->method('find')
-            ->willReturn('foo');
-        $entityManager->method('getRepository')
+            ->willReturn($foo);
+        $this->entityManager->method('getRepository')
             ->willReturn($repo);
 
         $resourceHandler = new DoctrineResourceHandler(
             $this->getMock(self::CLASS_NAMESPACE . 'ResourceFactoryInterface'),
-            $entityManager
+            $this->entityManager
         );
 
-        $this->assertEquals('foo', $resourceHandler->getSingle(1));
+        $this->assertEquals($foo, $resourceHandler->getSingle(1));
     }
 
     /**
      * @test
      * @expectedException \Exception
      */
+    public function findResourceCollectionNoRepo()
+    {
+        $resourceHandler = new DoctrineResourceHandler(
+            $this->getMock(self::CLASS_NAMESPACE . 'ResourceFactoryInterface'),
+            $this->entityManager
+        );
+        $resourceHandler->getCollection();
+    }
+    /**
+     * @test
+     */
     public function findResourceCollection()
     {
-        $this->resourceHandler->getCollection();
+        $repo = $this->getMockBuilder('\Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $repo->method('findBy')
+            ->willReturn(array());
+        $this->entityManager->method('getRepository')
+            ->willReturn($repo);
+        $resourceHandler = new DoctrineResourceHandler(
+            $this->getMock(self::CLASS_NAMESPACE . 'ResourceFactoryInterface'),
+            $this->entityManager
+        );
+
+        $resourceHandler->getCollection();
+        $this->assertEquals(array(), $resourceHandler->getCollection());
     }
 
     /**
