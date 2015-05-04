@@ -8,9 +8,18 @@
       "name": "Kauri Kont-Kontson"
     }
   ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/managlea/EntityManager.git"
+    }
+  ],
   "autoload": {
     "psr-4": {"Managlea\\ResourceMapper\\": "src/"},
     "psr-4": {"Managlea\\Component\\": "src/"}
+  },
+  "require": {
+    "managlea/entity-manager": "dev-master"
   },
   "require-dev": {
     "codeclimate/php-test-reporter": "dev-master"

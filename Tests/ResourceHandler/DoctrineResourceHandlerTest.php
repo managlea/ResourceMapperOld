@@ -1,6 +1,6 @@
 <?php
 
-namespace Managlea\Component\Tests\ResourceHandlerTest;
+namespace Managlea\Component\Tests\ResourceHandler;
 
 use Managlea\Component\ResourceHandler\DoctrineResourceHandler;
 
@@ -16,16 +16,73 @@ class DoctrineResourceHandlerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->resourceHandler = new DoctrineResourceHandler($this->getMock(self::CLASS_NAMESPACE . 'ResourceFactoryInterface'));
+        $entityManager = $this->getMockBuilder(self::CLASS_NAMESPACE . 'EntityManagerInterface')
+            ->getMock();
+
+        $this->resourceHandler = new DoctrineResourceHandler(
+            $this->getMock(self::CLASS_NAMESPACE . 'ResourceFactoryInterface'),
+            $entityManager
+        );
     }
 
     /**
      * @test
      * @expectedException \Exception
      */
+    public function findResourceException()
+    {
+        $entityManager = $this->getMockBuilder(self::CLASS_NAMESPACE . 'EntityManagerInterface')
+            ->getMock();
+
+        $resourceHandler = new DoctrineResourceHandler(
+            $this->getMock(self::CLASS_NAMESPACE . 'ResourceFactoryInterface'),
+            $entityManager
+        );
+
+        $resourceHandler->getSingle(1);
+    }
+
+    /**
+     * @test
+     */
+    public function findResourceNoEntity()
+    {
+        $entityManager = $this->getMockBuilder(self::CLASS_NAMESPACE . 'EntityManagerInterface')
+            ->getMock();
+        $entityManager->method('getRepository')
+            ->willReturn($this->getMockBuilder('\Doctrine\ORM\EntityRepository')
+                ->disableOriginalConstructor()
+                ->getMock());
+
+        $resourceHandler = new DoctrineResourceHandler(
+            $this->getMock(self::CLASS_NAMESPACE . 'ResourceFactoryInterface'),
+            $entityManager
+        );
+
+        $this->assertEquals(false, $resourceHandler->getSingle(1));
+    }
+
+    /**
+     * @test
+     */
     public function findResource()
     {
-        $this->resourceHandler->getSingle(1);
+        $entityManager = $this->getMockBuilder(self::CLASS_NAMESPACE . 'EntityManagerInterface')
+            ->getMock();
+        $repo = $this->getMockBuilder('\Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $repo->method('find')
+            ->willReturn('foo');
+        $entityManager->method('getRepository')
+            ->willReturn($repo);
+
+        $resourceHandler = new DoctrineResourceHandler(
+            $this->getMock(self::CLASS_NAMESPACE . 'ResourceFactoryInterface'),
+            $entityManager
+        );
+
+        $this->assertEquals('foo', $resourceHandler->getSingle(1));
     }
 
     /**

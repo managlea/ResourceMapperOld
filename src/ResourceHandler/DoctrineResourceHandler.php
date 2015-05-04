@@ -3,26 +3,69 @@
 namespace Managlea\Component\ResourceHandler;
 
 
+use Doctrine\ORM\EntityRepository;
+use Managlea\Component\EntityManagerInterface;
 use Managlea\Component\ResourceHandler;
+use Managlea\Component\ResourceFactoryInterface;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 class DoctrineResourceHandler extends ResourceHandler
 {
     /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(ResourceFactoryInterface $resourceFactory, EntityManagerInterface $entityManager)
+    {
+        parent::__construct($resourceFactory);
+        $this->entityManager = $entityManager;
+    }
+
+    /**
      * @param int $resourceId
-     * @todo Implement findResource() method.
+     * @return bool
+     * @throws Exception
      */
     protected function findResource($resourceId)
     {
-        throw new \Exception('Method not implemented');
+        $repository = $this->entityManager->getRepository(/*static::SOURCE_OBJECT_NAMESPACE*/);
+
+        if (!($repository instanceof EntityRepository)) {
+            throw new Exception('Repository not found');
+        }
+
+        $entity = $repository->find($resourceId);
+
+        if (!$entity) {
+            return false;
+        }
+
+        return $entity;
     }
 
     /**
      * @param array $filters
-     * @TODO: Implement findResourceCollection() method.
+     * @return array
      */
     protected function findResourceCollection(array $filters = array())
     {
-        throw new \Exception('Method not implemented');
+        $limit = 20;
+        $offset = 0;
+
+        if (!$this->entityManager) {
+            throw new Exception('Entity manager not set');
+        }
+
+        $repository = $this->entityManager->getRepository(/*static::SOURCE_OBJECT_NAMESPACE*/);
+
+        if (!($repository instanceof EntityRepository)) {
+            throw new Exception('Repository not found');
+        }
+
+        $collection = $repository->findBy($filters, null, $limit, $offset);
+
+        return $collection;
     }
 
     /**
@@ -32,6 +75,7 @@ class DoctrineResourceHandler extends ResourceHandler
     protected function createResource(array $data)
     {
         throw new \Exception('Method not implemented');
+
     }
 
     /**
